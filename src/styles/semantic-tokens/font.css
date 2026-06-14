@@ -1,0 +1,5 @@
+@theme {
+  /* Font Tokens based on font configurations from fonts.ts */
+  --font-helvetica: var(--font-helvetica), sans-serif;
+  --font-neue: var(--font-neue), sans-serif;
+}
