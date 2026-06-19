@@ -1,0 +1,35 @@
+/* Tailwind v4 @theme — expose Bingo design tokens as Tailwind utilities.
+   Use these as `bg-ink`, `text-muted`, `font-display`, etc. */
+
+@theme {
+  /* Colors */
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-muted-soft: var(--muted-soft);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-ok: var(--ok);
+
+  --color-primary: var(--primary);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-tint-2: var(--primary-tint-2);
+
+  --color-daub: var(--daub);
+  --color-daub-deep: var(--daub-deep);
+  --color-daub-tint: var(--daub-tint);
+
+  /* Fonts (next/font/google sets the values via CSS variables on <html>) */
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-ui: var(--font-ui), system-ui, -apple-system, sans-serif;
+  --font-num: var(--font-num), ui-monospace, monospace;
+
+  /* Shadows */
+  --shadow-bingo-sm: var(--shadow-sm);
+  --shadow-bingo-md: var(--shadow-md);
+  --shadow-bingo-lg: var(--shadow-lg);
+  --shadow-ball: var(--shadow-ball);
+}

@@ -1,0 +1,139 @@
+---
+name: design_system_components
+description: Defines how to build DS interactive components (Button, Text, Input) using CVA, token consumption, state handling, and API structure.
+applyIntelligently: true
+---
+
+# Typography and Interactive Components Rules
+
+## 1. Font-size Variables and Typography
+
+### Typography Token Declaration
+- Font-size variables are declared in the Design System
+- Respect Figma structure and nomenclature
+- Apply same name transformation rules (`/` → `-`)
+
+Do not use:
+- Arbitrary text sizes
+- Standard Tailwind values when a DS token exists
+
+### Typography Consumption
+Must always be done through:
+- Tailwind utilities linked to DS
+- Base `<Text>` component with respective variant and HTML element type
+  - If it's a `<p>`, no need to specify — it's the default render
+
+Avoid:
+- Inline HTML text elements instead of the `Text` component
+- Overriding variant values via `className` or `style` — except when Figma explicitly declares otherwise
+
+---
+
+## 2. Buttons and Standard Tailwind Usage
+
+### 2.1 Physical Button Sizes
+Height, width, and padding are not mandatory DS tokens — standard Tailwind values are allowed and recommended.
+Applies to: horizontal padding, vertical padding, internal gaps.
+
+### 2.2 Variant Categorization (CVA Structure)
+
+Button component uses `cva` with variants:
+- **`size`**
+- **`variant`** (corresponds to `hierarchy` in Figma)
+- **`colorScheme`** (corresponds to `color` in Figma)
+- **`widthMode`** (corresponds to `behavior` in Figma)
+
+When chromatic property depends on a `variant` + `colorScheme` combination → use `compoundVariants`.
+If a property is shared across all variants → define it directly in `colorScheme`.
+
+### 2.3 Default Values (`defaultVariants`)
+Must declare defaults in `cva`. Example:
+```typescript
+size: 'md'
+variant: 'primary'
+widthMode: 'fixed'
+colorScheme: 'default'
+```
+These values may vary per project — analyze and define when creating the component.
+
+### 2.4 Button Component Public API
+Main exposed props: `variant`, `colorScheme`.
+Component must allow declaring all variants (size, widthMode, etc.) even if rarely used.
+
+### 2.5 States and colorScheme
+Each `colorScheme` must cover all DS-defined states, at minimum:
+- background
+- main text color
+
+Mandatory interactive states: `default`, `hover`, `active (pressed)`, `focus-visible`.
+
+Do not omit states defined in DS.
+
+---
+
+## 3. Background and Text in Buttons
+
+- Background colors: must declare all corresponding states
+- Text colors: must declare all corresponding states, aligned with each button state
+- Do not assume implicit values
+
+Button must be completely deterministic from `variant` + `colorScheme`.
+
+---
+
+## 4. Text Component Rules
+
+- Follows same structural principles as Button
+- Uses DS tokens for typography
+- Does not have interactive states by default (no hover, focus, active)
+
+---
+
+## 5. DS Component Rendering
+
+### Default Rendering
+`Text` component must be able to render: `"span"`, `"p"`, and `"h1"` through `"h6"` via an `"as"` prop with default value `"p"`.
+
+### asChild Prop
+Must support `asChild`. When present, use Radix `Slot` — the child element defines the final render.
+
+Use cases: rendering buttons as links, custom wrappers, integration with other components.
+
+`asChild` is mandatory for rendering buttons as links to maintain correct HTML semantics.
+
+---
+
+## 6. Link Usage
+
+Navigation links: use exclusively `next/link`.
+
+Do not create custom wrappers or alternative Link components.
+
+When a button acts as a link → use `Button` + `asChild` + `Link` as child.
+
+Common `<a>` anchors are only allowed for external links.
+
+---
+
+## 7. CVA Class Declaration
+
+All classes defined in `cva` must be declared as inline strings directly within the cva configuration.
+
+Not allowed: class arrays, `.join(" ")`, helpers to group classes, dynamic concatenations.
+
+Allowed: explicit strings per variant.
+
+---
+
+## 8. Scope for Interactive Components
+
+All interactive components added to DS must comply with the same rules defined for Button:
+inputs, toggles, selects, tabs, custom controls, etc.
+
+Each component:
+- Can define different variant categories in `cva`
+- Must have `defaultVariants`
+- Must cover all states defined in DS
+- Must be completely deterministic from its props
+
+Do not: omit states, invent variants not in DS, or assume implicit styles.

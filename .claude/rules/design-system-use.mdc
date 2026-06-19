@@ -1,0 +1,175 @@
+---
+name: design_system_use
+description: Specifies how to correctly apply DS tokens, map Figma variables to Tailwind, handle interactive states, and maintain style precedence.
+applyIntelligently: true
+---
+
+# Design System (DS) Implementation Rules
+
+**Note**: DS refers to the Design System, both in Tailwind and Figma. Distinctions will be clarified when necessary.
+
+---
+
+## 1. Nomenclature Between Figma and Tailwind
+
+### Naming Conventions
+Design System rules in Figma often share nomenclature with Tailwind.
+
+Slight adaptations:
+- `/` in Figma → `-` in Tailwind
+- `-` in Figma → remains the same in Tailwind
+
+### Inline Class Examples
+```
+/background/primary/default → bg-background-primary-default
+neutral-foreground-muted → bg-neutral-foreground-muted | text-neutral-foreground-muted
+```
+
+### Within DS (.css) Examples
+```css
+/background/primary/default →
+
+--background-primary-default: <value>;
+
+@theme {
+  --color-background-primary-default: var(--background-primary-default);
+}
+```
+
+---
+
+## 2. Background Tokens
+
+Some tokens in Figma do not explicitly indicate they are background tokens.
+
+In Tailwind may be found as:
+- `bg-<token>`
+- `--color-<token>` (in `.css` files)
+- Or same name as in Figma
+
+---
+
+## 3. Standard Tailwind Values
+
+Can be used directly when:
+- They match general design values
+- They don't correspond to specific DS tokens
+
+Valid examples: `rounded-xl`, `pt-2`, `gap-4`
+
+**Exception**: Text sizes — always use DS tokens, never standard Tailwind values for typography.
+
+---
+
+## 4. Arbitrary Values (`[]`)
+
+### Priority Order
+1. DS-defined tokens
+2. Standard Tailwind values
+3. Arbitrary values — only when no valid alternative exists
+
+Arbitrary values introduce styles outside the DS contract. Only use when the value:
+- Does not exist as a token
+- Cannot be represented with standard utilities
+- Is part of a structural rule (e.g., `aspect-*`, `--view-size` in Carousel)
+
+---
+
+## 4.1 Design System CSS Variables Usage
+
+### Main Rule
+All DS CSS variables must:
+- Be exposed in Tailwind's `@theme`
+- Be consumed through Tailwind classes, not directly as `var()`
+
+#### Incorrect
+```
+bg-[var(--bg-primary)]
+text-[var(--text-muted)]
+```
+
+#### Correct
+```
+bg-bg-primary
+text-text-muted
+```
+
+Reserved `var(--*)` usage: only for internal DS definitions or when the token is not exposed in Tailwind.
+
+---
+
+## 5. Interactive State Tokens
+
+### State Token Identification
+Tokens ending in: `-hovered`, `-focused`, `-pressed`
+
+| DS Token / Status | CSS State |
+|---|---|
+| hovered | `:hover` |
+| pressed | `:active` |
+| focused | `:focus-visible` |
+
+Do not:
+- Interpret these values as component variants
+- Map these states incorrectly
+- Create custom pseudo-states
+- Define interactive states if they don't exist in DS
+
+### Note on "Active" State
+The `Active` state in Figma DS components does NOT correspond to CSS `:active`. It represents a logical component state (selected, toggled, current, expanded).
+
+Map to: component props (`isActive`, `isSelected`, `isOpen`), `data-state`, or `aria-*` attributes.
+
+---
+
+## 6. Cards and Responsive Layout
+
+### Card Implementation Priority
+- Prioritize `aspect-ratio`
+- `aspect-[]` is allowed for visual fidelity with Figma
+
+### Base Rule
+
+❌ Do not use fixed sizes: `w-[xxx]`, `h-[xxx]`
+
+✅ Use instead: `max-w-*`, `max-h-*`, `w-full`, `h-full`, `aspect-*`
+
+### Card Reusability
+If a card repeats or parts of its structure are reused in other sections, implement it using Compound architecture.
+
+---
+
+## 7. Base System Components
+
+Interactive and typographic elements must derive from base components:
+- `Button`, `Text`, `Input`, etc.
+
+Each base component:
+- Defines the corresponding HTML element
+- Spreads props (`{...props}`)
+- Declares variants using `class-variance-authority (cva)`
+
+Variants must:
+- Correspond to DS
+- Not introduce arbitrary styles
+- Maintain consistency between components
+
+---
+
+## 8. General Principles
+
+Do not:
+- Duplicate existing tokens
+- Create visual variants outside DS
+- Visually solve something already defined in the system
+- Prioritize extreme fidelity over consistency when DS already defines behavior
+
+Before using tokens: verify the token exists in Tailwind DS.
+
+### Style Precedence Order
+1. DS component variants (CVA)
+2. Design System tokens
+3. Standard Tailwind utilities (layout/spacing)
+4. Arbitrary values (`[]`) — only as last resort
+
+Do not override DS variant styles with external classes unless Figma explicitly indicates it.

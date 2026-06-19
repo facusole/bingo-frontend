@@ -1,0 +1,76 @@
+---
+name: base_rules
+description: Mandatory tech stack, styling conventions, and third-party library policies for all projects.
+alwaysApply: true
+---
+
+# Project Base Rules
+
+## Rule Scope
+
+- Defines permitted technologies and mandatory conventions
+- Does not define folder structure or naming (see `architecture.mdc`)
+- Does not define how to build Design System components (see `design-system-components.mdc`)
+
+## Framework
+
+### Next.js 16 with App Router
+
+- **Default**: Server Components for all components
+- **Client Components** (`'use client'`) only when:
+  - Animation depends on state or interaction
+  - Direct user interaction required (event handlers, inputs)
+  - External library explicitly requires it (see `custom-library.mdc`)
+- Always justify `'use client'` usage
+- Keep Client Components as isolated leaf nodes
+
+## Styling
+
+### Tailwind CSS v4
+
+- Primary and mandatory styling system
+- Traditional CSS not allowed for layout or common styles
+- Native CSS only permitted for:
+  - `@keyframes` animations
+  - Custom Properties (`--variables`)
+  - Visual effects that cannot be expressed with Tailwind
+- Never hardcode visual values outside the token system
+
+## Animations
+
+### Motion
+
+- Primary library for all animations — no alternatives allowed
+- CSS animations only permitted when:
+  - No state required
+  - Purely decorative
+  - No complex interaction dependency
+
+## Carousels
+
+### Embla (via internal CLI)
+
+- Only permitted carousel system
+- Swiper, Slick, and all alternatives are prohibited
+- Complex carousels must use the internal library implementation
+
+## Forms and Validation
+
+### Zod
+
+- Mandatory for form validation, data schemas, and input validation
+- Complex validation logic requires an explicit schema definition
+
+## Package Manager
+
+### PNPM
+
+- Mandatory — npm and yarn are not allowed
+
+## Internal Libraries
+
+### Company CLI (`@androbinco/library-cli`)
+
+- All primary UI tools (animations, carousels, overlays, etc.) must come from the internal CLI
+- Some components use Radix UI as a base — do not use Radix UI directly
+- Consume only through CLI-provided components (see `custom-library.mdc`)

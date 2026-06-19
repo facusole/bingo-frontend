@@ -1,12 +1,37 @@
 @import 'tailwindcss';
+
+/* Template scaffold tokens (kept for compatibility — not used by Bingo screens). */
 @import './foundations/colors.css';
-@import './semantic-tokens/font.css';
 @import './semantic-tokens/colors.css';
 @import './semantic-tokens/text.css';
+
+/* Bingo foundations — palette vars, neutrals, shadows. */
+@import './foundations/bingo-tokens.css';
+
+/* Bingo semantic tokens — expose to Tailwind's @theme. */
+@import './semantic-tokens/bingo-theme.css';
+
+/* Bingo component layer — bespoke visuals + keyframes. */
+@import './components/bingo.css';
+
 @import 'tw-animate-css';
 
 @layer base {
+  html,
   body {
-    font-family: var(--font-helvetica), sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 6px;
   }
 }

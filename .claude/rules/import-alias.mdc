@@ -1,0 +1,48 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Import Alias Rule
+
+All imports must use the `@/` alias instead of relative paths or `src/` prefixes.
+
+## Rule
+
+- Do not use `src/` prefixed imports
+- Do not use relative imports (`../../utils`)
+- Always use the `@/` alias for absolute imports
+
+## Examples
+
+❌ Incorrect:
+```typescript
+import { Component } from 'src/components/Component';
+import { utils } from '../../utils';
+```
+
+✅ Correct:
+```typescript
+import { Component } from '@/components/Component';
+import { utils } from '@/utils';
+```
+
+## Configured aliases (`tsconfig.json`)
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/common/*": ["./src/common/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/styles/*": ["./src/styles/*"]
+    }
+  }
+}
+```
+
+## Notes
+
+- Consistent aliasing prevents broken paths when moving files
+- Improves readability and IDE navigation

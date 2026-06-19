@@ -1,0 +1,41 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Function Declarations
+
+## Always use `function` declarations for clarity and consistency.
+
+- Prefer traditional `function` declarations over arrow functions.
+
+- For better readability, naming, and stack traces, use `function` for all top-level logic and utility functions.
+
+- Avoid arrow functions to prevent confusion with `this` context and to keep a consistent coding style across the codebase.
+
+# Example
+
+```js
+// Prefer this
+function myFunc(arg1, arg2) {
+  return arg1 + arg2;
+}
+
+// Over this
+const myFunc = (arg1, arg2) => {
+  return arg1 + arg2;
+};
+```
+
+## This rule applies to:
+- Utility functions
+- API logic
+- Hook implementations
+- Any top-level function declarations
+
+## Exceptions:
+- Arrow functions are allowed only in the following cases:
+- Inline callbacks (e.g., inside Array.map, filter, etc.)
+- Inside useEffect or similar hooks
+- As event handlers inside React components
+

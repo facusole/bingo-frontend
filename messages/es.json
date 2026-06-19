@@ -1,0 +1,101 @@
+{
+  "common": {
+    "brand": "Bingo 90",
+    "host": "Anfitrión",
+    "you": "Tú",
+    "connecting": "Conectando…",
+    "reconnecting": "Reconectando…",
+    "ballOf": "Bola {index} de {total}",
+    "waitingForFirstBall": "Esperando el primer número",
+    "live": "En vivo",
+    "loading": "Cargando…",
+    "back": "Atrás",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "theme": "Tema",
+    "language": "Idioma",
+    "players": "Jugadores"
+  },
+  "home": {
+    "heroTitle": "Bingo 90",
+    "heroSubtitle": "Jugá con amigos en el navegador.\nSin cuenta: entrás con tu nombre.",
+    "tabs": {
+      "create": "Crear sala",
+      "join": "Unirse"
+    },
+    "nameLabel": "Tu nombre",
+    "namePlaceholder": "¿Cómo te llamás?",
+    "codeLabel": "Código de sala",
+    "codePlaceholder": "• • • • •",
+    "createCta": "Crear sala",
+    "createHint": "Vas a recibir un código corto para compartir. Quedás como anfitrión.",
+    "joinCta": "Unirse"
+  },
+  "lobby": {
+    "eyebrow": "Sala de espera",
+    "shareHint": "Compartí este código. Cuando estén todos, {role, select, admin {empezás vos} other {el anfitrión empieza}}.",
+    "playersCount": "Jugadores · {count}",
+    "startCta": "Iniciar partida",
+    "waitingForHost": "Esperando a que el anfitrión empiece.",
+    "leaveCta": "Salir de la sala",
+    "copyCode": "Copiar código",
+    "copied": "Copiado"
+  },
+  "game": {
+    "calledNumber": "Número cantado",
+    "callNext": "Cantar número",
+    "noNumbersLeft": "No quedan números",
+    "hostCallsNumbers": "El anfitrión canta los números. Tu cartón se marca solo.",
+    "yourCard": "Tu cartón",
+    "history": "Cantados",
+    "players": "Jugadores · {count}",
+    "lineWinner": "{count, plural, one {Línea para {names}} other {Línea para {names}}}",
+    "lineHeadline": {
+      "self": "¡Hiciste línea!",
+      "others": "¡Línea cantada!"
+    },
+    "viewAll": "Ver todos",
+    "calledDrawerTitle": "Números cantados",
+    "playersDrawerTitle": "Jugadores",
+    "closeRoom": "Cerrar sala"
+  },
+  "finished": {
+    "eyebrow": "Partida terminada",
+    "youWon": "¡Ganaste!",
+    "someoneWon": "Ganó {name}",
+    "tieWon": "Empate: ganaron {names}",
+    "youWonBody": "Completaste tu cartón. Bien jugado.",
+    "someoneWonBody": "Completó el cartón antes que nadie.",
+    "winningCard": "Cartón ganador",
+    "playAgain": "Volver a empezar",
+    "closeRoom": "Cerrar sala",
+    "hostDecides": "El anfitrión decide si juegan otra.",
+    "leaveCta": "Salir"
+  },
+  "closed": {
+    "title": "La sala se cerró",
+    "body": "El anfitrión cerró la sala, así que la partida terminó. Podés volver al inicio y crear una nueva o unirte a otra.",
+    "bodyNotFound": "No encontramos esa sala. Puede que el anfitrión la haya cerrado o el código sea distinto.",
+    "backHome": "Volver al inicio"
+  },
+  "errors": {
+    "roomNotFound": "La sala no existe.",
+    "roomFull": "La sala está llena.",
+    "notAdmin": "Solo el anfitrión puede hacer eso.",
+    "connectionLost": "Perdimos la conexión. Volvé a intentarlo.",
+    "invalidName": "Necesitamos un nombre (mínimo 2 letras).",
+    "sessionExpired": "Tu sesión expiró. Volvé a entrar."
+  },
+  "palettes": {
+    "indigo": "Índigo",
+    "forest": "Bosque",
+    "sunset": "Atardecer",
+    "ocean": "Océano",
+    "rose": "Rosa"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Español",
+    "ja": "日本語"
+  }
+}

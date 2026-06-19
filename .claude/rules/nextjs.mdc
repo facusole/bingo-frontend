@@ -1,0 +1,71 @@
+---
+description: Next.js 16 project conventions and caching model
+globs:
+alwaysApply: false
+---
+# Next.js 16 Conventions
+
+## Framework
+
+- **Required**: Next.js 16 with App Router
+- **Default**: Server Components — use `'use client'` only when strictly necessary
+- Always justify `'use client'` usage; keep Client Components as leaf nodes
+
+## Cache Components model
+
+`cacheComponents: true` is enabled in `next.config.ts`. Rendering is **dynamic by default**.
+
+### Three tiers
+
+| Tier | Mechanism | When to use |
+|---|---|---|
+| Static | Sync code, prerendered at build | Page shells, nav, headings |
+| Cached | `'use cache'` + `cacheLife()` + `cacheTag()` | Data that can be served stale for minutes/hours |
+| Dynamic | `<Suspense>` around async RSC reading `cookies()`/`headers()` | Per-request, user-specific data |
+
+### `'use cache'` rules
+
+- Place the directive at the top of the async function body (component or utility)
+- Always call `cacheTag()` to enable targeted invalidation
+- Always call `cacheLife()` to set an explicit expiry profile (`'minutes'`, `'hours'`, `'days'`, `'max'`)
+- Never access `cookies()`, `headers()`, or `searchParams` inside a cached function — extract them outside and pass as arguments
+
+### Invalidation
+
+- `updateTag(tag)` — immediate, same-request invalidation (use after mutations in Server Actions)
+- `revalidateTag(tag)` — background revalidation (next request sees fresh data)
+
+### Migrating old patterns
+
+| Old | New |
+|---|---|
+| `export const revalidate = N` | `'use cache'` + `cacheLife({ revalidate: N })` |
+| `unstable_cache()` | `'use cache'` directive |
+| `dynamic = 'force-static'` | `'use cache'` + `cacheLife('max')` |
+| `dynamic = 'force-dynamic'` | Remove — dynamic is the default |
+| `experimental.ppr` | `cacheComponents: true` in `next.config.ts` |
+
+## Routing and params
+
+- `params` and `searchParams` are Promises in Next.js 16 — always `await` them
+- Use `generateStaticParams` for known slugs; it works alongside Cache Components
+
+## Middleware / proxy
+
+- Next.js 16 introduces `proxy.ts` for network boundary control (replaces `middleware.ts` for routing use cases)
+- Use `proxy.ts` at the root for rewrite/redirect logic when adding one to this project
+
+## Linting
+
+- `next lint` is removed in Next.js 16 — use `eslint .` directly
+- ESLint config: flat config at `eslint.config.mjs`
+
+## Turbopack
+
+- Turbopack is the default bundler — no `--turbopack` flag needed in scripts
+- Custom bundler config goes under top-level `turbopack` in `next.config.ts` (not `experimental`)
+
+## React Compiler
+
+- `reactCompiler: true` is set at the top level in `next.config.ts` (stable in Next.js 16)
+- The compiler enforces the Rules of Hooks; ESLint `react-compiler/react-compiler` rule is active

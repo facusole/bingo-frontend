@@ -1,0 +1,91 @@
+/* Foundation tokens — palette-agnostic neutrals + per-palette overrides.
+   Switch palettes by setting `data-palette` on <html>. */
+
+:root {
+  /* Neutrals */
+  --ink: #1a1b23;
+  --paper: #f5f5f2;
+  --surface: #ffffff;
+  --muted: #8a8d9b;
+  --muted-soft: #b7b9c3;
+  --line: rgba(26, 27, 35, 0.1);
+  --line-soft: rgba(26, 27, 35, 0.06);
+  --ok: #2fa56a;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(26, 27, 35, 0.06), 0 1px 3px rgba(26, 27, 35, 0.04);
+  --shadow-md: 0 4px 14px rgba(26, 27, 35, 0.07), 0 1px 4px rgba(26, 27, 35, 0.05);
+  --shadow-lg: 0 18px 48px rgba(26, 27, 35, 0.13), 0 4px 12px rgba(26, 27, 35, 0.07);
+}
+
+/* Default palette (indigo + vermillion). Applied when no data-palette is set
+   or when explicitly indigo. */
+:root,
+[data-palette='indigo'] {
+  --primary: #4338ca;
+  --primary-700: #372ea8;
+  --primary-800: #2d2688;
+  --primary-tint: #ecebfa;
+  --primary-tint-2: #dedcf6;
+  --primary-gloss: #7a6fec;
+  --daub: #fb5e3b;
+  --daub-deep: #e4421e;
+  --daub-tint: rgba(251, 94, 59, 0.14);
+  --shadow-ball: 0 14px 28px rgba(67, 56, 202, 0.3), 0 4px 10px rgba(45, 38, 136, 0.22);
+}
+
+/* Forest — emerald primary, amber daub */
+[data-palette='forest'] {
+  --primary: #0f766e;
+  --primary-700: #115e59;
+  --primary-800: #134e4a;
+  --primary-tint: #e0f4f1;
+  --primary-tint-2: #c6ebe5;
+  --primary-gloss: #34d4b8;
+  --daub: #f59e0b;
+  --daub-deep: #b45309;
+  --daub-tint: rgba(245, 158, 11, 0.16);
+  --shadow-ball: 0 14px 28px rgba(15, 118, 110, 0.3), 0 4px 10px rgba(19, 78, 74, 0.22);
+}
+
+/* Sunset — orange primary, pink daub */
+[data-palette='sunset'] {
+  --primary: #ea580c;
+  --primary-700: #c2410c;
+  --primary-800: #9a3412;
+  --primary-tint: #ffe9d6;
+  --primary-tint-2: #ffd0a8;
+  --primary-gloss: #fb923c;
+  --daub: #db2777;
+  --daub-deep: #9d174d;
+  --daub-tint: rgba(219, 39, 119, 0.14);
+  --shadow-ball: 0 14px 28px rgba(234, 88, 12, 0.3), 0 4px 10px rgba(154, 52, 18, 0.22);
+}
+
+/* Ocean — blue primary, sky-cyan daub */
+[data-palette='ocean'] {
+  --primary: #1d4ed8;
+  --primary-700: #1e40af;
+  --primary-800: #1e3a8a;
+  --primary-tint: #e0eaff;
+  --primary-tint-2: #c5d6ff;
+  --primary-gloss: #60a5fa;
+  --daub: #06b6d4;
+  --daub-deep: #0e7490;
+  --daub-tint: rgba(6, 182, 212, 0.16);
+  --shadow-ball: 0 14px 28px rgba(29, 78, 216, 0.3), 0 4px 10px rgba(30, 58, 138, 0.22);
+}
+
+/* Rose — pink primary, gold daub */
+[data-palette='rose'] {
+  --primary: #be185d;
+  --primary-700: #9d174d;
+  --primary-800: #831843;
+  --primary-tint: #fce4ee;
+  --primary-tint-2: #f9c4d8;
+  --primary-gloss: #f472b6;
+  --daub: #d97706;
+  --daub-deep: #92400e;
+  --daub-tint: rgba(217, 119, 6, 0.14);
+  --shadow-ball: 0 14px 28px rgba(190, 24, 93, 0.3), 0 4px 10px rgba(131, 24, 67, 0.22);
+}

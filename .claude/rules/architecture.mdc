@@ -1,0 +1,107 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Project Architecture Rules
+
+## Screaming Architecture Pattern
+The project follows a screaming architecture pattern where the top-level directories clearly
+communicate the business domains and features of the
+
+
+### Directory Structure 
+
+src/
+├─ app/
+│  ├─ home/
+│  │  ├─ page.tsx
+├─ common/
+│  ├─ config/
+│  │  ├─ providers/
+│  │  │  ├─ providers.tsx
+│  ├─ hooks/
+│  │  ├─ use-media-query.ts
+│  ├─ types/
+│  │  ├─ text/
+│  │  │  ├─ text.ts
+│  ├─ ui/
+│  │  ├─ text/
+│  │  │  ├─ text.tsx
+│  │  │  ├─ text.styles.ts
+│  ├─ utils/
+│  │  ├─ add-http.ts
+├─ features/
+│  ├─ home/
+│  │  ├─ components/
+│  │  │  ├─ banner/
+│  │  │  │  ├─ banner.tsx
+│  │  ├─ styles/
+│  │  │  ├─ banner/
+│  │  │  │  ├─ banner.styles.ts
+│  │  ├─ utils/
+│  │  │  ├─ date-conversion.ts
+│  │  ├─ hooks/
+│  │  │  ├─ use-images.ts
+├─ styles/
+│  ├─ semantic-tokens/
+│  ├─ foundations/
+│  ├─ globals.css
+
+### Detailed Directory Breakdown 🔎:
+
+#### `src/app/` 🚀
+This directory is primarily for the application's entry points and routing, often dictated by the framework in use (in this case, Next.js 16 App Router).
+
+* **Purpose**: To define page structures, layouts, and routing logic.
+* **Structure**:
+    * `app/{route-group}/{page-name}/page.tsx`: Defines the entry point for a specific page or route. These pages will then compose UI and logic from the `features/` and `common/` directories.
+* **Example**: `app/home/page.tsx` is the entry file for the homepage route, which would then utilize components and logic from `features/home/`.
+* **Note**: While framework-specific, the `app/` directory ideally remains lean, delegating most of the business logic and UI rendering to the feature modules.
+
+#### `src/common/` 🔗
+This directory houses code that is shared and reused across multiple features or throughout the application. What defines if it should be a feature or is it common is if it's imported inside ONLY `{feature-name}` or it's imported across multiple pages/features.
+
+* **Purpose**: To avoid code duplication and provide a central place for common functionalities, UI elements, types, and configurations.
+* **Structure**:
+    * `common/config/`: Application-wide configurations, such as context providers.
+        * *Example*: `common/config/providers/providers.tsx` could set up theme providers, React Query client, or global state management.
+    * `common/hooks/`: Reusable React hooks applicable in various parts of the application.
+        * *Example*: `common/hooks/use-media-query.ts` for responsive design logic.
+    * `common/types/`: Global TypeScript type definitions.
+        * *Example*: `common/types/text/text.ts` (though more generic types like `common/types/user.ts` or `common/types/api.ts` are also common).
+    * `common/ui/`: Generic, presentation-focused UI components that can be used anywhere (buttons, inputs, layout elements). These are typically "dumb" components.
+        * *Example*: `common/ui/text/text.tsx` and `common/ui/text/text.styles.ts` define a reusable text component.
+    * `common/utils/`: Utility functions with broad applicability across the project.
+        * *Example*: `common/utils/add-http.ts` for formatting URLs.
+
+#### `src/features/` 🧩
+This is the heart of our architecture, directly reflecting the application's domain. Each subdirectory within `features/` represents a distinct functional area or "feature" of the application. What defines if it should be a feature or is it common is if it's imported inside ONLY `{feature-name}` or it's imported across multiple pages/features.
+
+* **Purpose**: To encapsulate all the code (components, hooks, styles, utilities, services, types, etc.) related to a specific business domain or page of the application. If a piece of code is *only* used within one feature (e.g., the homepage's specific banner), it resides here.
+* **Structure**:
+    * `features/{feature-name}/components/`: React components exclusively used by this feature.
+        * *Example*: `features/home/components/banner/banner.tsx` is a banner component displayed *only* on the homepage.
+    * `features/{feature-name}/hooks/`: React hooks specific to this feature's logic or state.
+        * *Example*: `features/home/hooks/use-images.ts` might handle image loading or manipulation logic unique to the homepage.
+    * `features/{feature-name}/styles/`: Styles (e.g., CSS Modules, styled-components outputs) that apply only to components within this feature.
+        * *Example*: `features/home/styles/banner/banner.styles.ts` contains styles specific to the homepage banner.
+    * `features/{feature-name}/utils/`: Utility functions that are only relevant to this particular feature.
+        * *Example*: `features/home/utils/date-conversion.ts` for date formatting used solely within the home feature.
+
+#### `src/styles/` 🎨
+
+* **Purpose**: To manage global styling concerns that are not specific to any single component or feature.
+* **Structure**:
+    * `styles/globals.css`: Entry point, used as a barrel import for Tailwind configuration files or other global stylesheets.
+    * `styles/foundations/`: `:root` CSS variables for colors, fonts, spacing, etc. The idea is to use these definitions to override or extend default Tailwind values, keeping foundational design tokens centralized.
+    * `styles/semantic-tokens/`: `@theme` overrides or similar theme-specific configurations, with values often taken from a design system (e.g., Figma). This is where semantic design tokens (e.g., `color-background-primary`, `color-text-accent`) are defined for the project, ensuring better alignment with the design team.
+
+## Files Naming Convention
+
+* **Case**: All files and directories should use `kebab-case`.
+    * *Examples*:
+        * `my-component.tsx`
+        * `user-profile-feature/`
+        * `auth-service.ts`
+        * `global-styles.css`

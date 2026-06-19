@@ -1,0 +1,96 @@
+---
+name: figma_mcp_workflow
+description: Establishes workflow for extracting, analyzing, and implementing Figma designs using MCP tools and Design System correlation.
+applyIntelligently: true
+---
+
+# Figma MCP Implementation Rules
+
+## Task Scope
+
+### Starting Requirements
+Every layout task using Figma MCP must begin with:
+- **Specific section** to work on
+- **Figma node** clearly indicated
+- **Do not assume** context in Figma outside specified node (unless user specifies)
+- **"Review/check Figma"** means using MCP tools to obtain information
+
+## 1. Rule Scope
+
+This document:
+- Defines how to think about and execute layout using Figma MCP
+- Establishes workflow for Figma-to-code implementation
+- Ensures design system consistency
+
+## 2. Figma Node Registration and Analysis
+
+### Node Registration Process
+Once target node is identified, use MCP to:
+
+1. **Get design system variables** used (`get_variable_defs` function)
+2. **Get visual representation** (`get_screenshot` function)
+3. **Get positions and general structure** (`get_metadata` function)
+4. **Get structure similar to expected final result** (`get_design_context` function)
+
+### Pre-Implementation Analysis
+Before starting layout implementation:
+- Analyze visual structure of section
+- Identify:
+  - Internal variables
+  - Token usage (colors, typography, spacing, radius)
+  - Element disposition and hierarchy
+  - Sizes and proportions
+
+## 3. Design System Correlation
+
+### Before Implementing Any Element
+Must verify:
+- Equivalent variants exist in Tailwind Design System
+- Project components already solve this case
+
+### For Each Component Used
+Verify at least once:
+- Variant exists
+- Styles match Figma design
+
+Do not recreate styles or variants that already exist.
+
+## 4. Component Usage and Creation
+
+### Existing Components
+If Figma element already exists in project DS → must reuse.
+If it does not exist → must create new one.
+
+### Component Location Decision
+
+**Common / reusable use**: `src/common/ui/`
+
+**Section or feature-specific use**:
+- Main component: `/x-component/components/`
+- Or corresponding feature: `src/features/x-page/x-section/components/`
+
+**Default assumption**: if no previous use found and not explicitly indicated → assume component is section-specific.
+
+## 5. Section Layout Implementation
+
+### Layout Must Respect
+- Structure
+- Disposition
+- Spacing
+- Visual hierarchy
+
+### Always Prioritize
+1. Existing tokens
+2. DS variants
+3. Reusable components
+
+Do not introduce new visual decisions without prior validation.
+
+## 6. Final Validation Against Figma
+
+### Once Layout is Complete
+1. Run **"Figma implementation tester"** sub-agent (`.cursor/subagent/figma-workflow-reviewer.md`)
+2. Provide context of:
+   - Everything executed
+   - Information extracted from MCP
+3. Wait for response

@@ -1,0 +1,250 @@
+---
+name: react_components_patterns
+description: Quick-reference guide for Next.js App Router component patterns (Server/Client composition). Covers 7 essential patterns with decision trees, use-case indicators, code examples, and anti-patterns.
+applyIntelligently: true
+---
+
+# Next.js Server/Client Component Patterns
+
+## Pattern Overview
+
+### 1. Donut Pattern
+**What:** Server component wraps client components, passing server data as props.
+
+**When to use:**
+- Need to fetch data on server and add interactivity on client
+- Want to minimize client bundle size
+- Need SEO for content but filters/sorting on client
+
+```jsx
+// Server Component (outer)
+export default async function Page() {
+  const data = await fetchFromDB();
+  return <ClientComponent data={data} />;
+}
+
+// Client Component (inner)
+'use client';
+export default function ClientComponent({ data }) {
+  const [state, setState] = useState(data);
+}
+```
+
+---
+
+### 2. Leaf Pattern
+**What:** Client components only at the edges (leaves) of the component tree.
+
+**When to use:**
+- Maximizing server components for performance
+- Most of UI is static with small interactive elements
+
+```jsx
+export default async function Page() {
+  return (
+    <Layout>           {/* Server */}
+      <Sidebar />      {/* Server */}
+      <Content>        {/* Server */}
+        <Button />     {/* Client - leaf */}
+      </Content>
+    </Layout>
+  );
+}
+```
+
+---
+
+### 3. Server-Client-Server Pattern
+**What:** Pass server components as children to client components.
+
+**When to use:**
+- Client component needs to control layout/visibility
+- Inner content should remain server-rendered
+- Modal, tabs, or accordion wrapping server content
+
+```jsx
+// Server
+export default async function Page() {
+  return (
+    <ClientModal>
+      <ServerContent />  {/* Passed as children */}
+    </ClientModal>
+  );
+}
+
+// Client
+'use client';
+export default function ClientModal({ children }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return isOpen && <div>{children}</div>;
+}
+```
+
+---
+
+### 4. Interleaving Pattern
+**What:** Alternate between server and client components throughout the tree.
+
+**When to use:**
+- Complex pages with mixed requirements
+- Building component lists where some need interactivity
+
+```jsx
+export default async function Page() {
+  const items = await fetchItems();
+  return (
+    <>
+      <ClientFilters />
+      {items.map(item => (
+        <ServerCard key={item.id}>
+          <ClientButton />
+        </ServerCard>
+      ))}
+    </>
+  );
+}
+```
+
+---
+
+### 5. Compound Components Pattern
+**What:** Related components sharing state through composition (client-only).
+
+**When to use:**
+- Building reusable UI libraries (tabs, accordion, dropdown)
+- Components need to communicate state
+- Creating design system components
+
+```jsx
+'use client';
+const Context = createContext();
+
+export function Parent({ children }) {
+  const [state, setState] = useState();
+  return (
+    <Context.Provider value={{ state, setState }}>
+      {children}
+    </Context.Provider>
+  );
+}
+
+export function Child() {
+  const { state, setState } = useContext(Context);
+  return <button onClick={() => setState(...)}>...</button>;
+}
+```
+
+---
+
+### 6. Context Provider Pattern
+**What:** Client providers wrapping server component tree.
+
+**When to use:**
+- Need global state (theme, auth, etc.)
+- Want most components to remain server components
+- Using libraries that require context (next-themes, etc.)
+
+```jsx
+// providers.tsx - Client
+'use client';
+export function Providers({ children }) {
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  );
+}
+
+// layout.tsx - Server
+export default function Layout({ children }) {
+  return <Providers>{children}</Providers>;
+}
+```
+
+---
+
+### 7. Shared Component Pattern
+**What:** Component without `'use client'` used in both contexts.
+
+**When to use:**
+- Pure display components (no state, no events)
+- Components that format/display data
+
+```jsx
+// NO 'use client' directive
+export default function DisplayCard({ data }) {
+  return <div>{data.title}</div>;
+}
+```
+
+---
+
+## Decision Tree
+
+```
+START
+│
+├─ Does component need interactivity (state, events, hooks)?
+│  │
+│  NO → Server Component
+│  │    ├─ Fetching data? → direct DB/fetch access
+│  │    └─ Pure display? → Shared Component (no 'use client')
+│  │
+│  YES → Does it wrap other components?
+│       │
+│       NO → LEAF PATTERN (place at edge of tree)
+│       │
+│       YES → What does it wrap?
+│            ├─ Server Components → SERVER-CLIENT-SERVER (pass as children)
+│            ├─ Needs shared state → COMPOUND COMPONENTS (Context)
+│            └─ Mix of both → INTERLEAVING
+│
+└─ Need to fetch data AND add interactivity?
+   └─ DONUT PATTERN
+```
+
+## Quick Selection Guide
+
+| Scenario | Pattern |
+|---|---|
+| Fetch data, then make it interactive | Donut |
+| Small interactive elements | Leaf |
+| Modal/tabs with server content | Server-Client-Server |
+| Product grid with filters | Interleaving |
+| Building UI library | Compound Components |
+| Theme/auth providers | Context Provider |
+| Display component | Shared Component |
+
+## Anti-Patterns
+
+### Importing Server into Client
+```jsx
+'use client';
+import ServerComponent from './Server'; // ERROR
+```
+Solution: use Server-Client-Server pattern (pass as children).
+
+### Unnecessary Client Boundaries
+```jsx
+'use client'; // Why?
+export default function StaticCard({ data }) {
+  return <div>{data}</div>; // No state, no events
+}
+```
+Solution: remove `'use client'`, use Shared Component pattern.
+
+### Passing Non-Serializable Props
+```jsx
+<ClientComponent
+  date={new Date()}   // non-serializable
+  func={() => {}}     // non-serializable
+/>
+```
+Solution: pass only serializable data (strings, numbers, plain objects, arrays).
+
+### Everything Client at Root Level
+```jsx
+'use client'; // At root layout — everything becomes client
+export default function RootLayout({ children }) {}
+```
+Solution: use Context Provider pattern instead.

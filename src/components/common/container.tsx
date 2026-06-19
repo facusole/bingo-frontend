@@ -1,5 +1,5 @@
-import React from 'react'
+import type { ReactNode } from 'react';
 
-export default function Container({ children }) {
-    return <section className="container mx-auto">{children}</section>
+export default function Container({ children }: { children: ReactNode }) {
+  return <section className="container mx-auto">{children}</section>;
 }

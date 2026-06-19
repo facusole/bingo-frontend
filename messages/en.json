@@ -1,0 +1,101 @@
+{
+  "common": {
+    "brand": "Bingo 90",
+    "host": "Host",
+    "you": "You",
+    "connecting": "Connecting…",
+    "reconnecting": "Reconnecting…",
+    "ballOf": "Ball {index} of {total}",
+    "waitingForFirstBall": "Waiting for the first number",
+    "live": "Live",
+    "loading": "Loading…",
+    "back": "Back",
+    "menu": "Menu",
+    "close": "Close",
+    "theme": "Theme",
+    "language": "Language",
+    "players": "Players"
+  },
+  "home": {
+    "heroTitle": "Bingo 90",
+    "heroSubtitle": "Play with friends, right in your browser.\nNo account — just your name.",
+    "tabs": {
+      "create": "Create room",
+      "join": "Join"
+    },
+    "nameLabel": "Your name",
+    "namePlaceholder": "What should we call you?",
+    "codeLabel": "Room code",
+    "codePlaceholder": "• • • • •",
+    "createCta": "Create room",
+    "createHint": "You'll get a short code to share. You become the host.",
+    "joinCta": "Join"
+  },
+  "lobby": {
+    "eyebrow": "Waiting room",
+    "shareHint": "Share this code. When everyone's in, {role, select, admin {you start the game} other {the host starts the game}}.",
+    "playersCount": "Players · {count}",
+    "startCta": "Start game",
+    "waitingForHost": "Waiting for the host to start.",
+    "leaveCta": "Leave room",
+    "copyCode": "Copy code",
+    "copied": "Copied"
+  },
+  "game": {
+    "calledNumber": "Called number",
+    "callNext": "Call number",
+    "noNumbersLeft": "No numbers left",
+    "hostCallsNumbers": "The host calls the numbers. Your card marks itself.",
+    "yourCard": "Your card",
+    "history": "Called",
+    "players": "Players · {count}",
+    "lineWinner": "{count, plural, one {Line for {names}} other {Line for {names}}}",
+    "lineHeadline": {
+      "self": "You got a line!",
+      "others": "Line!"
+    },
+    "viewAll": "View all",
+    "calledDrawerTitle": "Called numbers",
+    "playersDrawerTitle": "Players",
+    "closeRoom": "Close room"
+  },
+  "finished": {
+    "eyebrow": "Game over",
+    "youWon": "You won!",
+    "someoneWon": "{name} won",
+    "tieWon": "Tie: {names} won",
+    "youWonBody": "You completed your card. Well played.",
+    "someoneWonBody": "They completed their card before anyone else.",
+    "winningCard": "Winning card",
+    "playAgain": "Play again",
+    "closeRoom": "Close room",
+    "hostDecides": "The host decides whether to play another round.",
+    "leaveCta": "Leave"
+  },
+  "closed": {
+    "title": "The room is closed",
+    "body": "The host closed the room, so the game is over. You can go home and create or join another room.",
+    "bodyNotFound": "We couldn't find that room. The host may have closed it, or the code might be different.",
+    "backHome": "Back to home"
+  },
+  "errors": {
+    "roomNotFound": "Room not found.",
+    "roomFull": "This room is full.",
+    "notAdmin": "Only the host can do that.",
+    "connectionLost": "We lost the connection. Try again.",
+    "invalidName": "Please pick a name (at least 2 letters).",
+    "sessionExpired": "Your session expired. Please rejoin."
+  },
+  "palettes": {
+    "indigo": "Indigo",
+    "forest": "Forest",
+    "sunset": "Sunset",
+    "ocean": "Ocean",
+    "rose": "Rose"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Español",
+    "ja": "日本語"
+  }
+}

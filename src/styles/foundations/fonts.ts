@@ -1,27 +1,22 @@
-import localFont from 'next/font/local';
+import { Space_Grotesk, Geist, Martian_Mono } from 'next/font/google';
 
-export const HelveticaNeue = localFont({
-  src: [
-    {
-      path: '../../../public/fonts/HelveticaNeue.woff2',
-      weight: '400',
-    },
-
-    {
-      path: '../../../public/fonts/HelveticaNeue-Medium.woff2',
-      weight: '500',
-    },
-
-    {
-      path: '../../../public/fonts/HelveticaNeue-Bold.woff2',
-      weight: '700',
-    },
-  ],
-  variable: '--font-primary',
+export const fontDisplay = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-display',
 });
 
-export const NeuePlakCompBold = localFont({
-  src: '../../../public/fonts/NeuePlakCompBold.woff2',
+export const fontUi = Geist({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-secondary',
+  variable: '--font-ui',
+});
+
+export const fontNum = Martian_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-num',
 });

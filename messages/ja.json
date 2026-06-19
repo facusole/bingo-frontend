@@ -1,0 +1,101 @@
+{
+  "common": {
+    "brand": "ビンゴ90",
+    "host": "ホスト",
+    "you": "あなた",
+    "connecting": "接続中…",
+    "reconnecting": "再接続中…",
+    "ballOf": "{total}個中{index}個目のボール",
+    "waitingForFirstBall": "最初の番号を待っています",
+    "live": "進行中",
+    "loading": "読み込み中…",
+    "back": "戻る",
+    "menu": "メニュー",
+    "close": "閉じる",
+    "theme": "テーマ",
+    "language": "言語",
+    "players": "プレイヤー"
+  },
+  "home": {
+    "heroTitle": "ビンゴ90",
+    "heroSubtitle": "ブラウザで友達と遊ぼう。\nアカウント不要、お名前だけ。",
+    "tabs": {
+      "create": "部屋を作る",
+      "join": "参加する"
+    },
+    "nameLabel": "お名前",
+    "namePlaceholder": "なんてお呼びしますか?",
+    "codeLabel": "部屋コード",
+    "codePlaceholder": "• • • • •",
+    "createCta": "部屋を作る",
+    "createHint": "共有用の短いコードが発行され、あなたがホストになります。",
+    "joinCta": "参加する"
+  },
+  "lobby": {
+    "eyebrow": "待機部屋",
+    "shareHint": "このコードを共有してください。みんな揃ったら、{role, select, admin {あなたが開始します} other {ホストが開始します}}。",
+    "playersCount": "プレイヤー · {count}",
+    "startCta": "ゲーム開始",
+    "waitingForHost": "ホストが開始するのを待っています。",
+    "leaveCta": "退出する",
+    "copyCode": "コードをコピー",
+    "copied": "コピーしました"
+  },
+  "game": {
+    "calledNumber": "コール番号",
+    "callNext": "次の番号",
+    "noNumbersLeft": "残りの番号はありません",
+    "hostCallsNumbers": "ホストが番号をコールします。カードは自動で印が付きます。",
+    "yourCard": "あなたのカード",
+    "history": "コール済み",
+    "players": "プレイヤー · {count}",
+    "lineWinner": "{count, plural, one {{names} がライン達成} other {{names} がライン達成}}",
+    "lineHeadline": {
+      "self": "ラインです!",
+      "others": "ライン!"
+    },
+    "viewAll": "すべて見る",
+    "calledDrawerTitle": "コール済み番号",
+    "playersDrawerTitle": "プレイヤー",
+    "closeRoom": "部屋を閉じる"
+  },
+  "finished": {
+    "eyebrow": "ゲーム終了",
+    "youWon": "あなたの勝ち!",
+    "someoneWon": "{name} の勝ち",
+    "tieWon": "引き分け: {names} の勝ち",
+    "youWonBody": "カードを完成させました。お見事。",
+    "someoneWonBody": "他の誰よりも先にカードを完成させました。",
+    "winningCard": "勝者のカード",
+    "playAgain": "もう一度遊ぶ",
+    "closeRoom": "部屋を閉じる",
+    "hostDecides": "もう一戦するかはホストが決めます。",
+    "leaveCta": "退出する"
+  },
+  "closed": {
+    "title": "部屋が閉じられました",
+    "body": "ホストが部屋を閉じたため、ゲームは終了しました。ホームに戻って新しい部屋を作るか、別の部屋に参加できます。",
+    "bodyNotFound": "その部屋は見つかりませんでした。ホストが閉じたか、コードが違うかもしれません。",
+    "backHome": "ホームに戻る"
+  },
+  "errors": {
+    "roomNotFound": "部屋が見つかりません。",
+    "roomFull": "この部屋は満員です。",
+    "notAdmin": "ホストだけが操作できます。",
+    "connectionLost": "接続が切れました。もう一度試してください。",
+    "invalidName": "お名前を入力してください(2文字以上)。",
+    "sessionExpired": "セッションの有効期限が切れました。再度ご参加ください。"
+  },
+  "palettes": {
+    "indigo": "インディゴ",
+    "forest": "フォレスト",
+    "sunset": "サンセット",
+    "ocean": "オーシャン",
+    "rose": "ローズ"
+  },
+  "locales": {
+    "en": "English",
+    "es": "Español",
+    "ja": "日本語"
+  }
+}

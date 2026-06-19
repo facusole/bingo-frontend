@@ -1,0 +1,67 @@
+---
+name: custom_library
+description: Commands and reference for installing internal library components (carousel, animations, scroll effects, etc.) via CLI.
+applyIntelligently: true
+---
+
+# Internal Library CLI
+
+## Installation
+
+```bash
+# Interactive mode
+pnpx @androbinco/library-cli
+
+# Install specific component
+pnpx @androbinco/library-cli add <component>
+
+# Install component with variant
+pnpx @androbinco/library-cli add <component> <variant>
+
+# List all available components
+pnpx @androbinco/library-cli list
+
+# List variants for a specific component
+pnpx @androbinco/library-cli list <component>
+```
+
+---
+
+## Available Components
+
+| Component | Variants | Dependencies | Usage Rule |
+|---|---|---|---|
+| `carousel` | — | embla-carousel-react, embla-carousel, cva | `custom-carousel` skill |
+| `ticker` | `hover`, `non-hover` | motion | `custom-ticker` skill |
+| `scroll-components` | `scroll-tracker`, `parallax-image`, `scale-gallery` | motion | `custom-scroll-tracker` skill |
+| `in-view` | `grid`, `individual` | motion | `custom-inview-*` skills |
+| `faqs-accordion` | — | @radix-ui/react-accordion | — |
+| `lenis` | — | lenis | — |
+| `strapi-dynamic-zone` | — | — | — |
+
+---
+
+## Quick Install Examples
+
+```bash
+pnpx @androbinco/library-cli add carousel
+pnpx @androbinco/library-cli add faqs-accordion
+pnpx @androbinco/library-cli add lenis
+pnpx @androbinco/library-cli add strapi-dynamic-zone
+pnpx @androbinco/library-cli add ticker hover
+pnpx @androbinco/library-cli add ticker non-hover
+pnpx @androbinco/library-cli add scroll-components scroll-tracker
+pnpx @androbinco/library-cli add scroll-components parallax-image
+pnpx @androbinco/library-cli add scroll-components scale-gallery
+pnpx @androbinco/library-cli add in-view grid
+pnpx @androbinco/library-cli add in-view individual
+```
+
+---
+
+## Notes
+
+- Check if the component already exists (e.g. `src/components/carousel`) before running the install command
+- Commands complete without interactive prompts — suitable for automation
+- Missing dependencies are installed automatically
+- Returns non-zero exit code on failure
