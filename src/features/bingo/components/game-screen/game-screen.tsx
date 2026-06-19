@@ -12,16 +12,28 @@ import { Ball } from '@/features/bingo/components/ball/ball';
 import { BingoCard } from '@/features/bingo/components/bingo-card/bingo-card';
 import { HistoryBoard } from '@/features/bingo/components/history-board/history-board';
 import { HistoryStrip } from '@/features/bingo/components/history-strip/history-strip';
-import { PlayerList, type PlayerInfo } from '@/features/bingo/components/player-list/player-list';
+import { HostGamePanel } from '@/features/bingo/components/host-game-panel/host-game-panel';
+import {
+  countPlayers,
+  PlayerList,
+  type PlayerInfo,
+} from '@/features/bingo/components/player-list/player-list';
+import { PrizeDisplay } from '@/features/bingo/components/prize-display/prize-display';
+import type { PlayerProgress, Prize } from '@/features/bingo/utils/protocol';
 
 interface Props {
   isAdmin: boolean;
   selfId: string | null;
-  card: number[][];
+  /** `null` when the local viewer is the admin (host has no card). */
+  card: number[][] | null;
   drawn: number[];
   lastNumber: number | null;
   players: PlayerInfo[];
   lineWinners: string[];
+  linePrize: Prize;
+  bingoPrize: Prize;
+  /** Per-player distance to line/bingo. Populated only on the admin client. */
+  progress: PlayerProgress[];
   onCallNext: () => void;
   onCloseRoom: () => void;
 }
@@ -36,6 +48,9 @@ export function GameScreen({
   lastNumber,
   players,
   lineWinners,
+  linePrize,
+  bingoPrize,
+  progress,
   onCallNext,
   onCloseRoom,
 }: Props) {
@@ -55,11 +70,13 @@ export function GameScreen({
     .map((id) => players.find((p) => p.id === id)?.name ?? '—')
     .join(', ');
   const selfIsLineWinner = selfId != null && lineWinners.includes(selfId);
+  const playerCount = countPlayers(players);
 
   // While the celebration window is open, find which row(s) on the local
   // card just completed. Backend doesn't tell us, so derive from card+drawn.
+  // Admin has no card; this only matters for the player view.
   const winningRowIndexes = useMemo(() => {
-    if (!lineBannerOpen || !selfIsLineWinner) return undefined;
+    if (!lineBannerOpen || !selfIsLineWinner || !card) return undefined;
     return card.reduce<number[]>((acc, row, r) => {
       const complete = row.every((n) => n === 0 || drawn.includes(n));
       if (complete) acc.push(r);
@@ -77,7 +94,7 @@ export function GameScreen({
         onClick={() => setPlayersOpen(true)}
       >
         <Icon color="var(--ink)" name="users" size={16} />
-        <span>{t('players', { count: players.length })}</span>
+        <span>{t('players', { count: playerCount })}</span>
       </button>
 
       <div className="flex flex-col gap-4">
@@ -138,15 +155,43 @@ export function GameScreen({
             <span className="banner--celebrate__headline">
               {selfIsLineWinner ? t('lineHeadline.self') : t('lineHeadline.others')}
             </span>
-            <span className="banner--celebrate__sub">{lineNames}</span>
+            <span className="banner--celebrate__sub">
+              {linePrize.enabled && linePrize.name.trim() !== ''
+                ? t('lineWinnerPrize', {
+                    count: lineWinners.length,
+                    names: lineNames,
+                    prize: linePrize.name,
+                  })
+                : t('lineWinner', {
+                    count: lineWinners.length,
+                    names: lineNames,
+                  })}
+            </span>
           </Banner>
         ) : null}
-        <BingoCard
-          card={card}
-          drawn={drawn}
-          lastNumber={lastNumber ?? undefined}
-          winningRowIndexes={winningRowIndexes}
-        />
+        {card ? (
+          <>
+            <PrizeDisplay
+              bingoPrize={bingoPrize}
+              linePrize={linePrize}
+              variant="compact"
+            />
+            <BingoCard
+              card={card}
+              drawn={drawn}
+              lastNumber={lastNumber ?? undefined}
+              winningRowIndexes={winningRowIndexes}
+            />
+          </>
+        ) : (
+          <HostGamePanel
+            bingoPrize={bingoPrize}
+            drawn={drawn}
+            linePrize={linePrize}
+            players={players}
+            progress={progress}
+          />
+        )}
         {isAdmin ? (
           <Button icon="close" size="sm" variant="danger" onClick={onCloseRoom}>
             {t('closeRoom')}
@@ -156,7 +201,7 @@ export function GameScreen({
 
       {/* Desktop-only inline players panel. Mobile uses the drawer below. */}
       <div className="hidden flex-col gap-4 lg:flex">
-        <Panel icon="users" title={t('players', { count: players.length })}>
+        <Panel icon="users" title={t('players', { count: playerCount })}>
           <PlayerList players={players} selfId={selfId} />
         </Panel>
       </div>

@@ -27,6 +27,34 @@
     font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    isolation: isolate;
+  }
+
+  /* Two blurred radial gradients of palette color — recolor automatically
+     when --primary / --daub change. */
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    pointer-events: none;
+    z-index: -1;
+    width: 60vmin;
+    height: 60vmin;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.25;
+  }
+
+  body::before {
+    top: -10vmin;
+    left: -10vmin;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  }
+
+  body::after {
+    bottom: -10vmin;
+    right: -10vmin;
+    background: radial-gradient(circle, var(--daub) 0%, transparent 70%);
   }
 
   :focus-visible {

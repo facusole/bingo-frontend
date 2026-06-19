@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function RoomShell({ code, initialName }: Props) {
-  const { state, start, draw, restart, close, forgetToken } = useRoom({
+  const { state, start, draw, restart, close, setPrizes, forgetToken } = useRoom({
     code,
     name: initialName,
   });
@@ -61,15 +61,17 @@ export function RoomShell({ code, initialName }: Props) {
       </div>
     ) : null;
 
-  if (state.state === 'finished' && state.card) {
+  if (state.state === 'finished') {
     return (
       <>
         {reconnectingBanner}
         <FinishedScreen
+          bingoPrize={state.bingoPrize}
           bingoWinners={state.bingoWinners}
           card={state.card}
           drawn={state.drawn}
           isAdmin={state.isAdmin}
+          linePrize={state.linePrize}
           players={state.players}
           reachedFinishedLive={state.reachedFinishedLive}
           selfId={state.playerId}
@@ -79,22 +81,26 @@ export function RoomShell({ code, initialName }: Props) {
           }}
           onLeave={forgetToken}
           onRestart={restart}
+          onSetPrizes={setPrizes}
         />
       </>
     );
   }
 
-  if (state.state === 'active' && state.card) {
+  if (state.state === 'active') {
     return (
       <>
         {reconnectingBanner}
         <GameScreen
+          bingoPrize={state.bingoPrize}
           card={state.card}
           drawn={state.drawn}
           isAdmin={state.isAdmin}
           lastNumber={state.lastNumber}
+          linePrize={state.linePrize}
           lineWinners={state.lineWinners}
           players={state.players}
+          progress={state.progress}
           selfId={state.playerId}
           onCallNext={draw}
           onCloseRoom={() => {
@@ -111,11 +117,14 @@ export function RoomShell({ code, initialName }: Props) {
     <>
       {reconnectingBanner}
       <LobbyScreen
+        bingoPrize={state.bingoPrize}
         code={code}
         isAdmin={state.isAdmin}
+        linePrize={state.linePrize}
         players={state.players}
         selfId={state.playerId}
         onLeave={forgetToken}
+        onSetPrizes={setPrizes}
         onStart={start}
       />
     </>

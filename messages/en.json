@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "Bingo 90",
+    "brand": "Hanamaru Bingo!",
     "host": "Host",
     "you": "You",
     "connecting": "Connecting…",
@@ -17,7 +17,7 @@
     "players": "Players"
   },
   "home": {
-    "heroTitle": "Bingo 90",
+    "heroTitle": "Hanamaru Bingo!",
     "heroSubtitle": "Play with friends, right in your browser.\nNo account — just your name.",
     "tabs": {
       "create": "Create room",
@@ -50,6 +50,7 @@
     "history": "Called",
     "players": "Players · {count}",
     "lineWinner": "{count, plural, one {Line for {names}} other {Line for {names}}}",
+    "lineWinnerPrize": "{count, plural, one {Line for {names} — takes {prize}!} other {Line for {names} — they share {prize}!}}",
     "lineHeadline": {
       "self": "You got a line!",
       "others": "Line!"
@@ -62,8 +63,11 @@
   "finished": {
     "eyebrow": "Game over",
     "youWon": "You won!",
+    "youWonPrize": "You won {prize}!",
     "someoneWon": "{name} won",
+    "someoneWonPrize": "{name} won {prize}",
     "tieWon": "Tie: {names} won",
+    "tieWonPrize": "Tie: {names} share {prize}",
     "youWonBody": "You completed your card. Well played.",
     "someoneWonBody": "They completed their card before anyone else.",
     "winningCard": "Winning card",
@@ -71,6 +75,26 @@
     "closeRoom": "Close room",
     "hostDecides": "The host decides whether to play another round.",
     "leaveCta": "Leave"
+  },
+  "prizes": {
+    "title": "Prizes",
+    "lineLabel": "Line prize",
+    "bingoLabel": "Bingo prize",
+    "lineShort": "Line",
+    "bingoShort": "Bingo",
+    "placeholder": "e.g. a study omamori"
+  },
+  "hostMeter": {
+    "title": "Tension meter",
+    "empty": "No players yet.",
+    "toLine": "L: {n}",
+    "toBingo": "B: {n}"
+  },
+  "hostPanel": {
+    "statsTitle": "Game stats",
+    "drawn": "Called",
+    "remaining": "Remaining",
+    "players": "Players"
   },
   "closed": {
     "title": "The room is closed",

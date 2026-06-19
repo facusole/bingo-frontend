@@ -22,7 +22,9 @@ export function TopBar({ roomCode, live }: Props) {
     <>
       <header className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-1 py-4">
         <Link aria-label={t('brand')} className="brand-mark text-lg" href="/">
-          <span className="brand-dot">90</span>
+          <span aria-hidden="true" className="brand-dot">
+            🌸
+          </span>
           <span>{t('brand')}</span>
         </Link>
 

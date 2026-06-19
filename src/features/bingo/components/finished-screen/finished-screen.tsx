@@ -10,18 +10,25 @@ import { useRouter } from '@/i18n/navigation';
 import { BingoCard } from '@/features/bingo/components/bingo-card/bingo-card';
 import { Confetti } from '@/features/bingo/components/confetti/confetti';
 import type { PlayerInfo } from '@/features/bingo/components/player-list/player-list';
+import { PrizeDisplay } from '@/features/bingo/components/prize-display/prize-display';
+import { PrizeEditor } from '@/features/bingo/components/prize-editor/prize-editor';
+import type { Prize } from '@/features/bingo/utils/protocol';
 
 interface Props {
   isAdmin: boolean;
   selfId: string | null;
-  card: number[][];
+  /** `null` when the local viewer is the admin (host has no card). */
+  card: number[][] | null;
   drawn: number[];
   players: PlayerInfo[];
   bingoWinners: string[];
   reachedFinishedLive: boolean;
+  linePrize: Prize;
+  bingoPrize: Prize;
   onRestart: () => void;
   onClose: () => void;
   onLeave: () => void;
+  onSetPrizes: (line: Prize, bingo: Prize) => void;
 }
 
 export function FinishedScreen({
@@ -32,9 +39,12 @@ export function FinishedScreen({
   players,
   bingoWinners,
   reachedFinishedLive,
+  linePrize,
+  bingoPrize,
   onRestart,
   onClose,
   onLeave,
+  onSetPrizes,
 }: Props) {
   const t = useTranslations('finished');
   const router = useRouter();
@@ -43,20 +53,31 @@ export function FinishedScreen({
     .filter((p): p is PlayerInfo => Boolean(p));
   const youWon = selfId !== null && bingoWinners.includes(selfId);
   const primary = winners[0];
+  const hasBingoPrize =
+    bingoPrize.enabled && bingoPrize.name.trim() !== '';
 
   function leave() {
     onLeave();
     router.push('/');
   }
 
-  const headline =
-    winners.length > 1
-      ? t('tieWon', { names: winners.map((w) => w.name).join(', ') })
-      : youWon
-        ? t('youWon')
-        : primary
-          ? t('someoneWon', { name: primary.name })
-          : t('eyebrow');
+  const winnersList = winners.map((w) => w.name).join(', ');
+  let headline: string;
+  if (winners.length > 1) {
+    headline = hasBingoPrize
+      ? t('tieWonPrize', { names: winnersList, prize: bingoPrize.name })
+      : t('tieWon', { names: winnersList });
+  } else if (youWon) {
+    headline = hasBingoPrize
+      ? t('youWonPrize', { prize: bingoPrize.name })
+      : t('youWon');
+  } else if (primary) {
+    headline = hasBingoPrize
+      ? t('someoneWonPrize', { name: primary.name, prize: bingoPrize.name })
+      : t('someoneWon', { name: primary.name });
+  } else {
+    headline = t('eyebrow');
+  }
 
   return (
     <div className="relative mx-auto flex w-full max-w-md flex-col gap-4">
@@ -80,13 +101,28 @@ export function FinishedScreen({
         </p>
       </div>
 
+      {card ? (
+        <div className="relative z-10">
+          <BingoCard
+            card={card}
+            drawn={drawn}
+            ownerName={primary?.name}
+            title={t('winningCard')}
+          />
+        </div>
+      ) : null}
+
+      {/* Admin can adjust prizes for the next round; everyone else just sees them. */}
       <div className="relative z-10">
-        <BingoCard
-          card={card}
-          drawn={drawn}
-          ownerName={primary?.name}
-          title={t('winningCard')}
-        />
+        {isAdmin ? (
+          <PrizeEditor
+            bingoPrize={bingoPrize}
+            linePrize={linePrize}
+            onChange={onSetPrizes}
+          />
+        ) : (
+          <PrizeDisplay bingoPrize={bingoPrize} linePrize={linePrize} />
+        )}
       </div>
 
       <div className="relative z-10 flex flex-col gap-3">

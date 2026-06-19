@@ -13,7 +13,7 @@ import { DEFAULT_PALETTE, PALETTE_COOKIE, isPalette } from '@/common/utils/palet
 import { routing } from '@/i18n/routing';
 
 export const metadata: Metadata = {
-  title: 'Bingo 90',
+  title: 'Hanamaru Bingo!',
   description: 'Real-time multiplayer 90-ball bingo. No accounts, just a code.',
 };
 

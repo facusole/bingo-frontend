@@ -11,9 +11,13 @@ import {
 import type {
   ClientMessage,
   PlayerInfo,
+  PlayerProgress,
+  Prize,
   RoomLifecycle,
   ServerMessage,
 } from '@/features/bingo/utils/protocol';
+
+const EMPTY_PRIZE: Prize = { enabled: false, name: '' };
 
 export type ConnectionStatus =
   | 'connecting'
@@ -28,6 +32,7 @@ export interface RoomState {
   status: ConnectionStatus;
   playerId: string | null;
   isAdmin: boolean;
+  /** 3×9 matrix, or `null` when the player is the room admin (host has no card). */
   card: number[][] | null;
   drawn: number[];
   lastNumber: number | null;
@@ -41,6 +46,12 @@ export interface RoomState {
    *  this session. Stays false when the initial snapshot already says
    *  finished (late joiner / reconnect — confetti should not run). */
   reachedFinishedLive: boolean;
+  linePrize: Prize;
+  bingoPrize: Prize;
+  /** Per-player distance to line/bingo. Populated only on the admin client
+   *  (the backend sends `host_progress` to admin only). Stable order by
+   *  playerId — the UI sorts by closeness. */
+  progress: PlayerProgress[];
 }
 
 const INITIAL: RoomState = {
@@ -57,6 +68,9 @@ const INITIAL: RoomState = {
   bingoWinners: [],
   error: null,
   reachedFinishedLive: false,
+  linePrize: EMPTY_PRIZE,
+  bingoPrize: EMPTY_PRIZE,
+  progress: [],
 };
 
 type Action =
@@ -86,6 +100,12 @@ function reducer(state: RoomState, action: Action): RoomState {
         lineWinners: [],
         bingoWinners: [],
         error: null,
+        linePrize: d.linePrize ?? EMPTY_PRIZE,
+        bingoPrize: d.bingoPrize ?? EMPTY_PRIZE,
+        // host_progress arrives separately right after the snapshot for admins
+        // in active games; reset here so a fresh snapshot doesn't carry stale
+        // numbers from a prior session.
+        progress: [],
       };
     }
     case 'player_list':
@@ -109,6 +129,14 @@ function reducer(state: RoomState, action: Action): RoomState {
       return { ...state, status: 'closed' };
     case 'error':
       return { ...state, error: msg.data.message };
+    case 'prizes_updated':
+      return {
+        ...state,
+        linePrize: msg.data.line,
+        bingoPrize: msg.data.bingo,
+      };
+    case 'host_progress':
+      return { ...state, progress: msg.data.players };
     default:
       return state;
   }
@@ -129,6 +157,9 @@ interface UseRoomReturn {
   draw: () => void;
   restart: () => void;
   close: () => void;
+  /** Admin-only. Update the configured line/bingo prizes. The backend rejects
+   *  this while the game is active. */
+  setPrizes: (line: Prize, bingo: Prize) => void;
   /** Reset state and force a fresh connection attempt (e.g. after stale-token recovery). */
   reconnect: () => void;
   /** Clear the persisted token (used when leaving the room). */
@@ -297,6 +328,11 @@ export function useRoom({ code, name, paused }: UseRoomOptions): UseRoomReturn {
   const draw = useCallback(() => send({ type: 'draw' }), [send]);
   const restart = useCallback(() => send({ type: 'restart' }), [send]);
   const closeRoom = useCallback(() => send({ type: 'close' }), [send]);
+  const setPrizes = useCallback(
+    (line: Prize, bingo: Prize) =>
+      send({ type: 'set_prizes', data: { line, bingo } }),
+    [send],
+  );
 
   const reconnect = useCallback(() => {
     attemptRef.current = 0;
@@ -314,6 +350,7 @@ export function useRoom({ code, name, paused }: UseRoomOptions): UseRoomReturn {
     draw,
     restart,
     close: closeRoom,
+    setPrizes,
     reconnect,
     forgetToken,
   };

@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "Bingo 90",
+    "brand": "Hanamaru Bingo!",
     "host": "Anfitrión",
     "you": "Tú",
     "connecting": "Conectando…",
@@ -17,7 +17,7 @@
     "players": "Jugadores"
   },
   "home": {
-    "heroTitle": "Bingo 90",
+    "heroTitle": "Hanamaru Bingo!",
     "heroSubtitle": "Jugá con amigos en el navegador.\nSin cuenta: entrás con tu nombre.",
     "tabs": {
       "create": "Crear sala",
@@ -50,6 +50,7 @@
     "history": "Cantados",
     "players": "Jugadores · {count}",
     "lineWinner": "{count, plural, one {Línea para {names}} other {Línea para {names}}}",
+    "lineWinnerPrize": "{count, plural, one {¡{names} hizo línea y se lleva {prize}!} other {¡{names} hicieron línea y comparten {prize}!}}",
     "lineHeadline": {
       "self": "¡Hiciste línea!",
       "others": "¡Línea cantada!"
@@ -62,8 +63,11 @@
   "finished": {
     "eyebrow": "Partida terminada",
     "youWon": "¡Ganaste!",
+    "youWonPrize": "¡Ganaste {prize}!",
     "someoneWon": "Ganó {name}",
+    "someoneWonPrize": "Ganó {name} y se lleva {prize}",
     "tieWon": "Empate: ganaron {names}",
+    "tieWonPrize": "Empate: {names} comparten {prize}",
     "youWonBody": "Completaste tu cartón. Bien jugado.",
     "someoneWonBody": "Completó el cartón antes que nadie.",
     "winningCard": "Cartón ganador",
@@ -71,6 +75,26 @@
     "closeRoom": "Cerrar sala",
     "hostDecides": "El anfitrión decide si juegan otra.",
     "leaveCta": "Salir"
+  },
+  "prizes": {
+    "title": "Premios",
+    "lineLabel": "Premio de línea",
+    "bingoLabel": "Premio de bingo",
+    "lineShort": "Línea",
+    "bingoShort": "Bingo",
+    "placeholder": "ej. un omamori para los estudios"
+  },
+  "hostMeter": {
+    "title": "Termómetro",
+    "empty": "Sin jugadores todavía.",
+    "toLine": "L: {n}",
+    "toBingo": "B: {n}"
+  },
+  "hostPanel": {
+    "statsTitle": "Estado de la partida",
+    "drawn": "Cantados",
+    "remaining": "Restantes",
+    "players": "Jugadores"
   },
   "closed": {
     "title": "La sala se cerró",

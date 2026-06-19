@@ -42,8 +42,10 @@ export default async function ComponentsPlayground({ params }: Props) {
     <main className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12">
       <header className="flex items-center justify-between">
         <div className="brand-mark text-lg">
-          <span className="brand-dot">90</span>
-          <span>Bingo 90 · components</span>
+          <span aria-hidden="true" className="brand-dot">
+            🌸
+          </span>
+          <span>Hanamaru Bingo! · components</span>
         </div>
         <div className="flex items-center gap-3">
           <PaletteSwitcher />

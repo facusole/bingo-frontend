@@ -6,19 +6,39 @@ import { Banner } from '@/common/ui/banner/banner';
 import { Button } from '@/common/ui/button/button';
 import { Panel } from '@/common/ui/panel/panel';
 import { useRouter } from '@/i18n/navigation';
-import { PlayerList, type PlayerInfo } from '@/features/bingo/components/player-list/player-list';
+import {
+  countPlayers,
+  PlayerList,
+  type PlayerInfo,
+} from '@/features/bingo/components/player-list/player-list';
+import { PrizeDisplay } from '@/features/bingo/components/prize-display/prize-display';
+import { PrizeEditor } from '@/features/bingo/components/prize-editor/prize-editor';
 import { RoomCodeStub } from '@/features/bingo/components/room-code-stub/room-code-stub';
+import type { Prize } from '@/features/bingo/utils/protocol';
 
 interface Props {
   code: string;
   isAdmin: boolean;
   selfId: string | null;
   players: PlayerInfo[];
+  linePrize: Prize;
+  bingoPrize: Prize;
   onStart: () => void;
   onLeave: () => void;
+  onSetPrizes: (line: Prize, bingo: Prize) => void;
 }
 
-export function LobbyScreen({ code, isAdmin, selfId, players, onStart, onLeave }: Props) {
+export function LobbyScreen({
+  code,
+  isAdmin,
+  selfId,
+  players,
+  linePrize,
+  bingoPrize,
+  onStart,
+  onLeave,
+  onSetPrizes,
+}: Props) {
   const t = useTranslations('lobby');
   const router = useRouter();
 
@@ -37,7 +57,20 @@ export function LobbyScreen({ code, isAdmin, selfId, players, onStart, onLeave }
         </p>
       </div>
 
-      <Panel icon="users" title={t('playersCount', { count: players.length })}>
+      {isAdmin ? (
+        <PrizeEditor
+          bingoPrize={bingoPrize}
+          linePrize={linePrize}
+          onChange={onSetPrizes}
+        />
+      ) : (
+        <PrizeDisplay bingoPrize={bingoPrize} linePrize={linePrize} />
+      )}
+
+      <Panel
+        icon="users"
+        title={t('playersCount', { count: countPlayers(players) })}
+      >
         <PlayerList players={players} selfId={selfId} />
       </Panel>
 

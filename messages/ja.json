@@ -1,6 +1,6 @@
 {
   "common": {
-    "brand": "ビンゴ90",
+    "brand": "花丸ビンゴ!",
     "host": "ホスト",
     "you": "あなた",
     "connecting": "接続中…",
@@ -17,7 +17,7 @@
     "players": "プレイヤー"
   },
   "home": {
-    "heroTitle": "ビンゴ90",
+    "heroTitle": "花丸ビンゴ!",
     "heroSubtitle": "ブラウザで友達と遊ぼう。\nアカウント不要、お名前だけ。",
     "tabs": {
       "create": "部屋を作る",
@@ -50,6 +50,7 @@
     "history": "コール済み",
     "players": "プレイヤー · {count}",
     "lineWinner": "{count, plural, one {{names} がライン達成} other {{names} がライン達成}}",
+    "lineWinnerPrize": "{count, plural, one {{names} がライン達成、賞品「{prize}」} other {{names} がライン達成、{prize} をシェア}}",
     "lineHeadline": {
       "self": "ラインです!",
       "others": "ライン!"
@@ -62,8 +63,11 @@
   "finished": {
     "eyebrow": "ゲーム終了",
     "youWon": "あなたの勝ち!",
+    "youWonPrize": "あなたの勝ち! 賞品は「{prize}」",
     "someoneWon": "{name} の勝ち",
+    "someoneWonPrize": "{name} の勝ち! 賞品は「{prize}」",
     "tieWon": "引き分け: {names} の勝ち",
+    "tieWonPrize": "引き分け: {names} が {prize} をシェア",
     "youWonBody": "カードを完成させました。お見事。",
     "someoneWonBody": "他の誰よりも先にカードを完成させました。",
     "winningCard": "勝者のカード",
@@ -71,6 +75,26 @@
     "closeRoom": "部屋を閉じる",
     "hostDecides": "もう一戦するかはホストが決めます。",
     "leaveCta": "退出する"
+  },
+  "prizes": {
+    "title": "賞品",
+    "lineLabel": "ライン賞品",
+    "bingoLabel": "ビンゴ賞品",
+    "lineShort": "ライン",
+    "bingoShort": "ビンゴ",
+    "placeholder": "例: 学業成就のお守り"
+  },
+  "hostMeter": {
+    "title": "緊張メーター",
+    "empty": "まだプレイヤーがいません。",
+    "toLine": "L: {n}",
+    "toBingo": "B: {n}"
+  },
+  "hostPanel": {
+    "statsTitle": "ゲーム情報",
+    "drawn": "コール済み",
+    "remaining": "残り",
+    "players": "プレイヤー"
   },
   "closed": {
     "title": "部屋が閉じられました",
