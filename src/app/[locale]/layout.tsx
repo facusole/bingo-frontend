@@ -13,8 +13,13 @@ import { DEFAULT_PALETTE, PALETTE_COOKIE, isPalette } from '@/common/utils/palet
 import { routing } from '@/i18n/routing';
 
 export const metadata: Metadata = {
-  title: 'Hanamaru Bingo!',
-  description: 'Real-time multiplayer 90-ball bingo. No accounts, just a code.',
+  title: { default: 'Hanamaru Bingo!', template: '%s | Hanamaru Bingo!' },
+  description:
+    'Bingo de 90 bolas multijugador en tiempo real. Jugá con amigos desde el navegador con solo tu nombre y un código de sala — sin cuentas.',
+  icons: {
+    icon: '/img/logo.webp',
+    apple: '/img/logo.webp',
+  },
 };
 
 export function generateStaticParams() {
