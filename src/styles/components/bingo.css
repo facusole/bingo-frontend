@@ -329,6 +329,37 @@
   color: var(--daub-deep);
 }
 
+/* Drawn but not yet manually marked by the player — subtle prompt. */
+.cell--drawn-hint {
+  border-color: var(--daub);
+  background: var(--daub-tint);
+}
+
+/* Not yet drawn in interactive mode — dimmed to guide the player's eye. */
+.cell--disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Interactive cells as buttons: reset browser button styles. */
+button.cell {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 1px solid var(--line-soft);
+  box-shadow: inset 0 -2px 0 rgba(26, 27, 35, 0.03);
+}
+
+button.cell--disabled {
+  cursor: default;
+}
+
+button.cell:not([disabled]):hover {
+  border-color: var(--daub);
+  background: var(--daub-tint);
+}
+
 /* Winning row pulse — applied to the 5 numbered cells in a row that just
    completed for the local player. Static fallback ensures the row reads as
    special under prefers-reduced-motion. */

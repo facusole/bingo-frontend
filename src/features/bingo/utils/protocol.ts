@@ -55,6 +55,10 @@ export interface ErrorData {
   message: string;
 }
 
+export interface ClaimRejectedData {
+  kind: 'line' | 'bingo';
+}
+
 export interface PrizesUpdatedData {
   line: Prize;
   bingo: Prize;
@@ -74,7 +78,8 @@ export type ServerMessage =
   | { type: 'room_closed'; data?: undefined }
   | { type: 'error'; data: ErrorData }
   | { type: 'prizes_updated'; data: PrizesUpdatedData }
-  | { type: 'host_progress'; data: HostProgressData };
+  | { type: 'host_progress'; data: HostProgressData }
+  | { type: 'claim_rejected'; data: ClaimRejectedData };
 
 export interface JoinData {
   name?: string;
@@ -86,6 +91,10 @@ export interface SetPrizesData {
   bingo: Prize;
 }
 
+export interface ClaimData {
+  kind: 'line' | 'bingo';
+}
+
 /** Client -> Server message envelope. */
 export type ClientMessage =
   | { type: 'join'; data: JoinData }
@@ -93,4 +102,5 @@ export type ClientMessage =
   | { type: 'draw' }
   | { type: 'restart' }
   | { type: 'close' }
-  | { type: 'set_prizes'; data: SetPrizesData };
+  | { type: 'set_prizes'; data: SetPrizesData }
+  | { type: 'claim'; data: ClaimData };

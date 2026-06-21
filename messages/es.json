@@ -58,7 +58,12 @@
     "viewAll": "Ver todos",
     "calledDrawerTitle": "Números cantados",
     "playersDrawerTitle": "Jugadores",
-    "closeRoom": "Cerrar sala"
+    "closeRoom": "Cerrar sala",
+    "claimLine": "¡Línea!",
+    "claimBingo": "¡Bingo!",
+    "claiming": "Cantando…",
+    "claimRejectedLine": "Todavía no tenés línea",
+    "claimRejectedBingo": "Todavía no tenés bingo"
   },
   "finished": {
     "eyebrow": "Partida terminada",

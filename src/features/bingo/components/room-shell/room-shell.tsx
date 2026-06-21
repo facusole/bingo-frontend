@@ -17,10 +17,20 @@ interface Props {
 }
 
 export function RoomShell({ code, initialName }: Props) {
-  const { state, start, draw, restart, close, setPrizes, forgetToken } = useRoom({
-    code,
-    name: initialName,
-  });
+  const {
+    state,
+    start,
+    draw,
+    restart,
+    close,
+    setPrizes,
+    forgetToken,
+    toggleMark,
+    claimLine,
+    claimBingo,
+    canClaimLine,
+    canClaimBingo,
+  } = useRoom({ code, name: initialName });
   const tCommon = useTranslations('common');
   const lastErrorRef = useRef<string | null>(null);
 
@@ -93,20 +103,28 @@ export function RoomShell({ code, initialName }: Props) {
         {reconnectingBanner}
         <GameScreen
           bingoPrize={state.bingoPrize}
+          canClaimBingo={canClaimBingo}
+          canClaimLine={canClaimLine}
           card={state.card}
+          claimPending={state.claimPending}
+          claimRejectedKind={state.claimRejectedKind}
           drawn={state.drawn}
           isAdmin={state.isAdmin}
           lastNumber={state.lastNumber}
           linePrize={state.linePrize}
           lineWinners={state.lineWinners}
+          marked={state.marked}
           players={state.players}
           progress={state.progress}
           selfId={state.playerId}
           onCallNext={draw}
+          onClaimBingo={claimBingo}
+          onClaimLine={claimLine}
           onCloseRoom={() => {
             forgetToken();
             close();
           }}
+          onToggleMark={toggleMark}
         />
       </>
     );

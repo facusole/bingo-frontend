@@ -36,6 +36,15 @@ interface Props {
   progress: PlayerProgress[];
   onCallNext: () => void;
   onCloseRoom: () => void;
+  // Interactive card props (non-admin only)
+  marked: Set<number>;
+  onToggleMark: (n: number) => void;
+  canClaimLine: boolean;
+  canClaimBingo: boolean;
+  claimPending: 'line' | 'bingo' | null;
+  claimRejectedKind: 'line' | 'bingo' | null;
+  onClaimLine: () => void;
+  onClaimBingo: () => void;
 }
 
 const LINE_BANNER_MS = 6000;
@@ -53,6 +62,14 @@ export function GameScreen({
   progress,
   onCallNext,
   onCloseRoom,
+  marked,
+  onToggleMark,
+  canClaimLine,
+  canClaimBingo,
+  claimPending,
+  claimRejectedKind,
+  onClaimLine,
+  onClaimBingo,
 }: Props) {
   const t = useTranslations('game');
   const [lineBannerOpen, setLineBannerOpen] = useState(false);
@@ -72,17 +89,16 @@ export function GameScreen({
   const selfIsLineWinner = selfId != null && lineWinners.includes(selfId);
   const playerCount = countPlayers(players);
 
-  // While the celebration window is open, find which row(s) on the local
-  // card just completed. Backend doesn't tell us, so derive from card+drawn.
-  // Admin has no card; this only matters for the player view.
+  // While the celebration window is open, find which row(s) the player marked
+  // as complete. In interactive mode this uses `marked`; otherwise uses `drawn`.
   const winningRowIndexes = useMemo(() => {
     if (!lineBannerOpen || !selfIsLineWinner || !card) return undefined;
     return card.reduce<number[]>((acc, row, r) => {
-      const complete = row.every((n) => n === 0 || drawn.includes(n));
+      const complete = row.every((n) => n === 0 || marked.has(n));
       if (complete) acc.push(r);
       return acc;
     }, []);
-  }, [lineBannerOpen, selfIsLineWinner, card, drawn]);
+  }, [lineBannerOpen, selfIsLineWinner, card, marked]);
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 lg:max-w-[1140px] lg:grid lg:grid-cols-[320px_minmax(380px,1fr)_300px]">
@@ -127,7 +143,6 @@ export function GameScreen({
 
         <Panel
           action={
-            // Mobile-only "view all" trigger that opens the history drawer.
             <button
               className="text-primary hover:text-primary-700 cursor-pointer text-[13px] font-semibold underline-offset-2 hover:underline lg:hidden"
               type="button"
@@ -141,7 +156,6 @@ export function GameScreen({
         >
           <div className="flex flex-col gap-3">
             <HistoryStrip drawn={drawn} />
-            {/* The full 90-cell board renders inline only on desktop. */}
             <div className="hidden lg:block">
               <HistoryBoard drawn={drawn} />
             </div>
@@ -169,6 +183,16 @@ export function GameScreen({
             </span>
           </Banner>
         ) : null}
+
+        {/* Claim rejected toast — only visible to the claimant. */}
+        {claimRejectedKind ? (
+          <div className="banner banner--error" role="status">
+            <span>
+              {claimRejectedKind === 'line' ? t('claimRejectedLine') : t('claimRejectedBingo')}
+            </span>
+          </div>
+        ) : null}
+
         {card ? (
           <>
             <PrizeDisplay
@@ -179,9 +203,35 @@ export function GameScreen({
             <BingoCard
               card={card}
               drawn={drawn}
+              gameActive
               lastNumber={lastNumber ?? undefined}
+              marked={marked}
               winningRowIndexes={winningRowIndexes}
+              onToggleMark={onToggleMark}
             />
+            {/* Claim buttons — only shown to non-admin players. */}
+            <div className="flex gap-3">
+              <Button
+                block
+                disabled={!canClaimLine || claimPending !== null}
+                icon="crown"
+                size="lg"
+                variant={canClaimLine ? 'primary' : 'ghost'}
+                onClick={onClaimLine}
+              >
+                {claimPending === 'line' ? t('claiming') : t('claimLine')}
+              </Button>
+              <Button
+                block
+                disabled={!canClaimBingo || claimPending !== null}
+                icon="megaphone"
+                size="lg"
+                variant={canClaimBingo ? 'primary' : 'ghost'}
+                onClick={onClaimBingo}
+              >
+                {claimPending === 'bingo' ? t('claiming') : t('claimBingo')}
+              </Button>
+            </div>
           </>
         ) : (
           <HostGamePanel

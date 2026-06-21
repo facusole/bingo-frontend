@@ -58,7 +58,12 @@
     "viewAll": "View all",
     "calledDrawerTitle": "Called numbers",
     "playersDrawerTitle": "Players",
-    "closeRoom": "Close room"
+    "closeRoom": "Close room",
+    "claimLine": "Line!",
+    "claimBingo": "Bingo!",
+    "claiming": "Claiming…",
+    "claimRejectedLine": "You don't have a line yet",
+    "claimRejectedBingo": "You don't have bingo yet"
   },
   "finished": {
     "eyebrow": "Game over",

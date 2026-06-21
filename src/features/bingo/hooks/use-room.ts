@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 
 import { wsBase } from '@/common/utils/config';
 import {
@@ -52,7 +52,17 @@ export interface RoomState {
    *  (the backend sends `host_progress` to admin only). Stable order by
    *  playerId — the UI sorts by closeness. */
   progress: PlayerProgress[];
+  /** Numbers the player has manually marked on their card. Client-only state;
+   *  the server never stores this. Resets on each new snapshot. */
+  marked: Set<number>;
+  /** Non-null while waiting for the server to validate a claim (pending → buttons
+   *  disabled). Cleared on claim_rejected or line/bingo_awarded. */
+  claimPending: 'line' | 'bingo' | null;
+  /** Non-null for ~3 s after the server sends claim_rejected. */
+  claimRejectedKind: 'line' | 'bingo' | null;
 }
+
+const EMPTY_MARKED = new Set<number>();
 
 const INITIAL: RoomState = {
   status: 'connecting',
@@ -71,16 +81,33 @@ const INITIAL: RoomState = {
   linePrize: EMPTY_PRIZE,
   bingoPrize: EMPTY_PRIZE,
   progress: [],
+  marked: EMPTY_MARKED,
+  claimPending: null,
+  claimRejectedKind: null,
 };
 
 type Action =
   | { kind: 'status'; status: ConnectionStatus }
   | { kind: 'server'; msg: ServerMessage }
-  | { kind: 'reset' };
+  | { kind: 'reset' }
+  | { kind: 'toggleMark'; n: number }
+  | { kind: 'startClaim'; claimKind: 'line' | 'bingo' }
+  | { kind: 'clearClaimRejected' };
 
 function reducer(state: RoomState, action: Action): RoomState {
   if (action.kind === 'reset') return INITIAL;
   if (action.kind === 'status') return { ...state, status: action.status };
+  if (action.kind === 'clearClaimRejected') return { ...state, claimRejectedKind: null };
+  if (action.kind === 'startClaim') return { ...state, claimPending: action.claimKind };
+  if (action.kind === 'toggleMark') {
+    const { n } = action;
+    // Only mark numbers that have been drawn; client-side guard.
+    if (!state.drawn.includes(n)) return state;
+    const next = new Set(state.marked);
+    if (next.has(n)) next.delete(n);
+    else next.add(n);
+    return { ...state, marked: next };
+  }
 
   const msg = action.msg;
   switch (msg.type) {
@@ -106,6 +133,9 @@ function reducer(state: RoomState, action: Action): RoomState {
         // in active games; reset here so a fresh snapshot doesn't carry stale
         // numbers from a prior session.
         progress: [],
+        marked: new Set<number>(),
+        claimPending: null,
+        claimRejectedKind: null,
       };
     }
     case 'player_list':
@@ -117,13 +147,19 @@ function reducer(state: RoomState, action: Action): RoomState {
         lastNumber: msg.data.number,
       };
     case 'line_awarded':
-      return { ...state, lineWinners: msg.data.winners, lineAwarded: true };
+      return {
+        ...state,
+        lineWinners: msg.data.winners,
+        lineAwarded: true,
+        claimPending: state.claimPending === 'line' ? null : state.claimPending,
+      };
     case 'bingo_awarded':
       return {
         ...state,
         bingoWinners: msg.data.winners,
         state: 'finished',
         reachedFinishedLive: true,
+        claimPending: null,
       };
     case 'room_closed':
       return { ...state, status: 'closed' };
@@ -137,6 +173,8 @@ function reducer(state: RoomState, action: Action): RoomState {
       };
     case 'host_progress':
       return { ...state, progress: msg.data.players };
+    case 'claim_rejected':
+      return { ...state, claimRejectedKind: msg.data.kind, claimPending: null };
     default:
       return state;
   }
@@ -164,6 +202,16 @@ interface UseRoomReturn {
   reconnect: () => void;
   /** Clear the persisted token (used when leaving the room). */
   forgetToken: () => void;
+  /** Toggle a number as manually marked on the player's card. */
+  toggleMark: (n: number) => void;
+  /** Send a line claim to the server. Disabled after claimPending is set. */
+  claimLine: () => void;
+  /** Send a bingo claim to the server. Disabled after claimPending is set. */
+  claimBingo: () => void;
+  /** True when the player's marked cells complete at least one row. */
+  canClaimLine: boolean;
+  /** True when all 15 numbered cells are marked. */
+  canClaimBingo: boolean;
 }
 
 const MAX_BACKOFF_ATTEMPTS = 4;
@@ -344,6 +392,38 @@ export function useRoom({ code, name, paused }: UseRoomOptions): UseRoomReturn {
     clearToken(code);
   }, [code]);
 
+  const toggleMark = useCallback(
+    (n: number) => dispatch({ kind: 'toggleMark', n }),
+    [],
+  );
+
+  const claimLine = useCallback(() => {
+    dispatch({ kind: 'startClaim', claimKind: 'line' });
+    send({ type: 'claim', data: { kind: 'line' } });
+  }, [send]);
+
+  const claimBingo = useCallback(() => {
+    dispatch({ kind: 'startClaim', claimKind: 'bingo' });
+    send({ type: 'claim', data: { kind: 'bingo' } });
+  }, [send]);
+
+  // Auto-clear the rejected toast after 3 s.
+  useEffect(() => {
+    if (!state.claimRejectedKind) return;
+    const t = setTimeout(() => dispatch({ kind: 'clearClaimRejected' }), 3000);
+    return () => clearTimeout(t);
+  }, [state.claimRejectedKind]);
+
+  const canClaimLine = useMemo(() => {
+    if (!state.card || state.state !== 'active' || state.lineAwarded) return false;
+    return state.card.some((row) => row.every((n) => n === 0 || state.marked.has(n)));
+  }, [state.card, state.marked, state.state, state.lineAwarded]);
+
+  const canClaimBingo = useMemo(() => {
+    if (!state.card || state.state !== 'active') return false;
+    return state.card.every((row) => row.every((n) => n === 0 || state.marked.has(n)));
+  }, [state.card, state.marked, state.state]);
+
   return {
     state,
     start,
@@ -353,5 +433,10 @@ export function useRoom({ code, name, paused }: UseRoomOptions): UseRoomReturn {
     setPrizes,
     reconnect,
     forgetToken,
+    toggleMark,
+    claimLine,
+    claimBingo,
+    canClaimLine,
+    canClaimBingo,
   };
 }

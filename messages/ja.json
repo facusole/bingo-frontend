@@ -58,7 +58,12 @@
     "viewAll": "すべて見る",
     "calledDrawerTitle": "コール済み番号",
     "playersDrawerTitle": "プレイヤー",
-    "closeRoom": "部屋を閉じる"
+    "closeRoom": "部屋を閉じる",
+    "claimLine": "ライン!",
+    "claimBingo": "ビンゴ!",
+    "claiming": "申告中…",
+    "claimRejectedLine": "まだラインになっていません",
+    "claimRejectedBingo": "まだビンゴになっていません"
   },
   "finished": {
     "eyebrow": "ゲーム終了",
